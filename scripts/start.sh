@@ -1,16 +1,21 @@
 #!/bin/bash
+set -e
 
-APP_DIR=/home/ubuntu/app
-JAR_PATH=$(find $APP_DIR -name "*.jar" | grep build/libs | head -n 1)
+APP_DIR="/home/ec2-user/app"
+LOG_FILE="$APP_DIR/app.log"
+PID_FILE="$APP_DIR/app.pid"
 
-if [ -z "$JAR_PATH" ]; then
-  echo "JAR not found" >> $APP_DIR/app.log
+cd "$APP_DIR"
+
+JAR=$(ls -1 *.jar | head -n 1)
+if [ -z "$JAR" ]; then
+  echo "[start] no jar found in $APP_DIR" >> "$LOG_FILE"
   exit 1
 fi
 
-echo "Starting $JAR_PATH" >> $APP_DIR/app.log
+echo "[start] $(date) starting $JAR" >> "$LOG_FILE"
 
-nohup java -jar "$JAR_PATH" \
-  > $APP_DIR/app.log 2>&1 &
+nohup java -jar "$JAR" >> "$LOG_FILE" 2>&1 &
+echo $! > "$PID_FILE"
 
-echo $! > $APP_DIR/app.pid
+echo "[start] pid=$(cat $PID_FILE)" >> "$LOG_FILE"
