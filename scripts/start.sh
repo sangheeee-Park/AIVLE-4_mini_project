@@ -31,3 +31,5 @@ else
   echo "[start] pid not running. check log above" >> "$LOG_FILE"
   exit 1
 fi
+
+exit 0
