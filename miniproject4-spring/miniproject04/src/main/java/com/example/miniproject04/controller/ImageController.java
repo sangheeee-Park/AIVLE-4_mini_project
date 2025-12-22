@@ -5,7 +5,8 @@ import com.example.miniproject04.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.Map;
 
 @RestController
@@ -16,13 +17,21 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    private final String BASE_URL = "http://localhost:8080"; // ⭐ 이미지 절대경로 prefix
+    //private final String BASE_URL = "http://localhost:8080"; // ⭐ 이미지 절대경로 prefix
+    // 서버 ip로 base url
+    private String getBaseUrl(HttpServletRequest request) {
+        return ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath(null)
+                .replaceQuery(null)
+                .build()
+                .toUriString();
+    }
 
     /** =======================================================
      * 1) 이미지 생성
      * ======================================================= */
     @PostMapping
-    public ResponseEntity<?> createImage(@RequestBody Map<String, Object> req) {
+    public ResponseEntity<?> createImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
 
         try {
             String tempUrl = (String) req.get("image_url");
@@ -32,7 +41,8 @@ public class ImageController {
             String savedUrl = imageService.createImage(tempUrl, bookId);
 
             // ⭐ 절대 URL로 변환
-            String fullUrl = BASE_URL + savedUrl;
+            //String fullUrl = BASE_URL + savedUrl;
+            String fullUrl = getBaseUrl(request) + savedUrl;
 
             return ResponseEntity.ok(
                     Map.of(
@@ -52,14 +62,14 @@ public class ImageController {
      * 2) 이미지 조회
      * ======================================================= */
     @PostMapping("/check")
-    public ResponseEntity<?> getImage(@RequestBody Map<String, Object> req) {
+    public ResponseEntity<?> getImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
 
         try {
             Long bookId = Long.valueOf(req.get("book_id").toString());
             GeneratedImage img = imageService.getImage(bookId);
 
             // ⭐ 절대 URL 생성
-            String fullUrl = BASE_URL + img.getImageUrl();
+            String fullUrl = getBaseUrl(request) + img.getImageUrl();
 
             return ResponseEntity.ok(
                     Map.of(
@@ -79,7 +89,7 @@ public class ImageController {
      * 3) 이미지 수정
      * ======================================================= */
     @PutMapping("/put")
-    public ResponseEntity<?> updateImage(@RequestBody Map<String, Object> req) {
+    public ResponseEntity<?> updateImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
 
         try {
             Long bookId = Long.valueOf(req.get("book_id").toString());
@@ -90,7 +100,7 @@ public class ImageController {
             String updatedUrl = imageService.updateImage(bookId, tempUrl, userId);
 
             // ⭐ 절대 URL 변환
-            String fullUrl = BASE_URL + updatedUrl;
+            String fullUrl = getBaseUrl(request) + updatedUrl;
 
             return ResponseEntity.ok(
                     Map.of(
