@@ -27,3 +27,7 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+server:
+  address: 0.0.0.0
+  port: 8080
