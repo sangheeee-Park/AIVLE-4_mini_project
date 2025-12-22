@@ -45,7 +45,7 @@ public class ImageController {
      * 1) 이미지 생성
      * ======================================================= */
     @PostMapping
-    public ResponseEntity<?> createImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
+    public ResponseEntity<?> createImage(@RequestBody Map<String, Object> req) {
 
         try {
             String tempUrl = (String) req.get("image_url");
@@ -77,7 +77,7 @@ public class ImageController {
      * 2) 이미지 조회
      * ======================================================= */
     @PostMapping("/check")
-    public ResponseEntity<?> getImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
+    public ResponseEntity<?> getImage(@RequestBody Map<String, Object> req) {
 
         try {
             Long bookId = Long.valueOf(req.get("book_id").toString());
@@ -105,7 +105,7 @@ public class ImageController {
      * 3) 이미지 수정
      * ======================================================= */
     @PutMapping("/put")
-    public ResponseEntity<?> updateImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
+    public ResponseEntity<?> updateImage(@RequestBody Map<String, Object> req) {
 
         try {
             Long bookId = Long.valueOf(req.get("book_id").toString());
