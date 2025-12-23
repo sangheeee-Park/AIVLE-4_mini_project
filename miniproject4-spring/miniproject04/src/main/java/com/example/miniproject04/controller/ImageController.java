@@ -27,20 +27,12 @@ public class ImageController {
                 .toUriString();
     }
 
-    // 어떤 ip 호출중인지 확인하기
-    private void logRequest(HttpServletRequest request) {
-    System.out.println("Host=" + request.getHeader("Host"));
-    System.out.println("X-Forwarded-Host=" + request.getHeader("X-Forwarded-Host"));
-    System.out.println("X-Forwarded-Proto=" + request.getHeader("X-Forwarded-Proto"));
-    System.out.println("requestURL=" + request.getRequestURL());
-    }
-
     /** =======================================================
      * 1) 이미지 생성
      * ======================================================= */
     @PostMapping
     public ResponseEntity<?> createImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
-        logRequest(request);
+
         try {
             String tempUrl = (String) req.get("image_url");
             Long bookId = Long.valueOf(req.get("book_id").toString());
@@ -71,7 +63,7 @@ public class ImageController {
      * ======================================================= */
     @PostMapping("/check")
     public ResponseEntity<?> getImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
-        logRequest(request);
+       
         try {
             Long bookId = Long.valueOf(req.get("book_id").toString());
             GeneratedImage img = imageService.getImage(bookId);
@@ -98,7 +90,7 @@ public class ImageController {
      * ======================================================= */
     @PutMapping("/put")
     public ResponseEntity<?> updateImage(@RequestBody Map<String, Object> req, HttpServletRequest request) {
-        logRequest(request);
+  
         try {
             Long bookId = Long.valueOf(req.get("book_id").toString());
             Long userId = Long.valueOf(req.get("user_id").toString());
